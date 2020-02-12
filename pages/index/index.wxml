@@ -1,7 +1,7 @@
 <!--视图 view-->
 <!--index.wxml-->
 <view class="weather-wrapper">
-<view class="temp">12°</view>
-<view class="explaination">晴天</view>
-<image class="weather-bg" src="/images/blue.png" mode="scaleToFill"></image>
+<view class="temp">{{nowTemp}}</view>
+<view class="explaination">{{nowWeather}}</view>
+<image class="weather-bg" src="{{nowWeatherBackground}}" mode="scaleToFill"></image>
 </view>
