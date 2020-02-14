@@ -24,6 +24,7 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground: '',
+    forecast: [1,2,3,4,5,6,7,8,9]
   },
   onPullDownRefresh(){
     //下拉刷新，重新request
@@ -62,6 +63,8 @@ Page({
         })
       },
       complete(){
+        //回调函数带有参数？
+        //函数b是你以参数形式传给函数a的，那么函数b就叫回调函数
         callback && callback()
         //Returns expr1 if it can be converted to false; otherwise, returns expr2. Thus, when used with Boolean values, && returns true if both operands are true; otherwise, returns false.
       }

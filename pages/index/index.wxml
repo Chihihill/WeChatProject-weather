@@ -1,7 +1,25 @@
 <!--视图 view-->
 <!--index.wxml-->
 <view class="weather-wrapper">
-<view class="temp">{{nowTemp}}</view>
-<view class="explaination">{{nowWeather}}</view>
-<image class="weather-bg" src="{{nowWeatherBackground}}" mode="scaleToFill"></image>
+  <view class="temp">{{nowTemp}}</view>
+  <view class="explaination">{{nowWeather}}</view>
+  <image class="weather-bg" src="{{nowWeatherBackground}}" mode="scaleToFill"></image>
 </view>
+<view class="timetips">
+  <image class="timetips-icon" src="/images/time-icon.png"></image>
+  <view class="timetips-text">未来24小时天气预测</view>
+</view>
+
+<scroll-view scroll-x>
+  <view class="forecast-list">
+    <view class="forecast-item" wx:for="{{forecast}}">
+      <view class= 'forecast-time'> {{item}}</view>
+    </view>
+  </view>
+</scroll-view>
+
+<!-- <view>1</view>
+<view>2</view>
+<view>3</view>
+<view>4</view>
+<view>5</view> -->
