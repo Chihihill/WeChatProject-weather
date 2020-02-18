@@ -48,9 +48,22 @@
 }
 .forecast-item{
   display: flex;
-  /* flex-direction: column; */
+  flex-direction: column;
   flex-shrink: 0;
   width: 120rpx;
-  font-size: 36rpx;
+  align-items: center;
+}
+.forecast-time{
+  font-size: 30rpx;
   line-height: 42rpx;
+}
+.forecast-weather{
+  margin-top: 50rpx;
+  width: 60rpx;
+  height: 60rpx;
+}
+.forecast-temp{
+  margin-top: 46rpx;
+  font-size: 40rpx;
+  line-height: 56rpx;
 }

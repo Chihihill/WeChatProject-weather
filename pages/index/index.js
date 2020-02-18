@@ -24,7 +24,7 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground: '',
-    forecast: [1,2,3,4,5,6,7,8,9]
+    hourlyForecast: []
   },
   onPullDownRefresh(){
     //下拉刷新，重新request
@@ -41,6 +41,7 @@ Page({
   getNow(callback){
     //在回调函数中是不可以使用this的，所以需要在外部定义一个变量代表this。
     var self = this
+
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now', 
       data: {
@@ -49,25 +50,48 @@ Page({
       success(res) {
         console.log(res)
         let result = res.data.result;
-        let temp = result.now.temp;
-        let weather = result.now.weather;
-        console.log(temp, weather);
-        self.setData({
-          nowTemp: temp + '°',
-          nowWeather: weatherMap[weather],
-          nowWeatherBackground: '/images/' + weather + '-bg.png'
-        })
-        wx.setNavigationBarColor({
-          frontColor: '#000000',
-          backgroundColor: weatherColorMap[weather],
-        })
-      },
+        self.setNow(result); 
+        self.setHourlyForecast(result);   
+      },  
       complete(){
         //回调函数带有参数？
         //函数b是你以参数形式传给函数a的，那么函数b就叫回调函数
         callback && callback()
         //Returns expr1 if it can be converted to false; otherwise, returns expr2. Thus, when used with Boolean values, && returns true if both operands are true; otherwise, returns false.
       }
+    })
+  },
+  setNow(result){
+    let temp = result.now.temp;
+    let weather = result.now.weather;
+    console.log(temp, weather);
+    this.setData({
+      nowTemp: temp + '°',
+      nowWeather: weatherMap[weather],
+      nowWeatherBackground: '/images/' + weather + '-bg.png'
+    })
+    wx.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: weatherColorMap[weather],
+    })
+  },
+  setHourlyForecast(result){
+    // set forecast
+    console.log(result);
+    let forecast = result.forecast;
+    let hourlyForecast = [];
+    let nowHour = new Date().getHours();
+    for (var i = 0; i < 24; i += 3) {
+      hourlyForecast.push({
+        time: (nowHour + i) % 24 + '时',
+        iconPath: '/images/' + forecast[i / 3].weather + '-icon.png',
+        temp: forecast[i / 3].temp + '°'
+      })
+    }
+    hourlyForecast[0].time = "现在";
+    this.setData({
+      //self == this
+      hourlyForecast: hourlyForecast
     })
   }
 })
