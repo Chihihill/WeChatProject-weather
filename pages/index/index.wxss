@@ -1,4 +1,4 @@
-/**样式 style**/
+/**css style**/
 /**index.wxss**/
 .temp{
   text-align: center;
@@ -66,4 +66,26 @@
   margin-top: 46rpx;
   font-size: 40rpx;
   line-height: 56rpx;
+}
+.day-weather{
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 40rpx;
+  right: 40rpx;
+  height: 90rpx;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 30rpx;
+  line-height: 42rpx;
+  opacity: 0.5;
+}
+.arrow-icon{
+  width: 13rpx;
+  height: 24rpx;
+}
+.temp-text{
+  flex-grow: 1;
+  padding-right: 30rpx;
+  text-align: right;
 }

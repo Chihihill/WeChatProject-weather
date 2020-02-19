@@ -24,7 +24,9 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground: '',
-    hourlyForecast: []
+    hourlyForecast: [],
+    todayTemp: '',
+    todayDate: ''
   },
   onPullDownRefresh(){
     //下拉刷新，重新request
@@ -52,6 +54,7 @@ Page({
         let result = res.data.result;
         self.setNow(result); 
         self.setHourlyForecast(result);   
+        self.setToday(result);
       },  
       complete(){
         //回调函数带有参数？
@@ -92,6 +95,19 @@ Page({
     this.setData({
       //self == this
       hourlyForecast: hourlyForecast
+    })
+  },
+  setToday(result){
+    let date = new Date();
+    this.setData({
+      todayTemp: `${result.today.maxTemp}° - ${result.today.minTemp}°`,
+      todayDate: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()} 今天 `
+    })
+  },
+  onTapDayWeather(){
+    wx.showToast()
+    wx.navigateTo({
+      url: '/pages/list/list',
     })
   }
 })
