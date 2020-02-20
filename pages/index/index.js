@@ -18,6 +18,7 @@ const weatherColorMap = {
   'heavyrain': '#c5ccd0',
   'snow': '#aae1fc'
 }
+const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
 
 Page({
   data:{
@@ -26,17 +27,25 @@ Page({
     nowWeatherBackground: '',
     hourlyForecast: [],
     todayTemp: '',
-    todayDate: ''
+    todayDate: '',
+    city: '上海市',
+    locationTipsText: '点击获取当前位置'
   },
   onPullDownRefresh(){
     //下拉刷新，重新request
-    this.getNow(//匿名函数作为回调函数，自执行
+    this.getNow(
+      //匿名函数作为回调函数，自执行
       () => {
         wx.stopPullDownRefresh()
       })
     //when refresh completed, stopPullDwonRefresh
   },
   onLoad(){
+    //location
+    this.qqmapsdk = new QQMapWX({
+      key: 'UWFBZ-CNZCW-VRDRW-R2ACY-J7XYJ-J4BX5'
+    })
+
     this.getNow()
     //onload do not need stopPullDownRefresh
   },
@@ -47,7 +56,7 @@ Page({
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now', 
       data: {
-        city: '深圳市'
+        city: self.data.city
       },
       success(res) {
         console.log(res)
@@ -107,7 +116,31 @@ Page({
   onTapDayWeather(){
     wx.showToast()
     wx.navigateTo({
-      url: '/pages/list/list',
+      url: '/pages/list/list?city=' + this.data.city,
+    })
+  },
+  onTapLocationWrapper(){
+    var self = this
+    wx.getLocation({
+      success: function(res) {
+        self.qqmapsdk.reverseGeocoder({
+          location: {
+            latitude: res.latitude,
+            longitude: res.longitude
+          },
+          success: function (res) {
+            let city = res.result.address_component.city
+            console.log(city)
+            self.setData({
+              city: city,
+              locationTipsText: ''
+            })
+            console.log('hh')
+            self.getNow()
+            console.log('hh')
+          },
+        })
+      },
     })
   }
 })
