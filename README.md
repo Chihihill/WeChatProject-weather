@@ -1,2 +1,2 @@
 # WeChatProject-weather
-A wechat mini-program about weather.
+A wechat mini-program about forecast.
