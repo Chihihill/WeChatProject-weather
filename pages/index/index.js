@@ -20,6 +20,14 @@ const weatherColorMap = {
 }
 const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
 
+const UNPROMPTED = 0
+const UNAUTHORIZED = 1
+const AUTHORIZED = 2
+
+const UNPROMPTED_TIPS = "点击获取当前位置"
+const UNAUTHORIZED_TIPS = "点击开启位置权限"
+const AUTHORIZED_TIPS = ""
+
 Page({
   data:{
     nowTemp: '',
@@ -29,7 +37,8 @@ Page({
     todayTemp: '',
     todayDate: '',
     city: '上海市',
-    locationTipsText: '点击获取当前位置'
+    locationAuthType: UNPROMPTED,
+    locationTipsText: UNPROMPTED_TIPS
   },
   onPullDownRefresh(){
     //下拉刷新，重新request
@@ -48,6 +57,22 @@ Page({
 
     this.getNow()
     //onload do not need stopPullDownRefresh
+  },
+  onShow(){
+    var self = this
+    wx.getSetting({
+      success: function(res){
+        let auth = res.authSetting['scope.userLocation']
+        if(auth && self.data.locationAuthType !== AUTHORIZED){
+          self.setData({
+            //权限从无到有
+            locationAuthType: AUTHORIZED,
+            locationTipsText: AUTHORIZED_TIPS
+          })
+          self.getLocation()
+        }
+      }
+    })
   },
   getNow(callback){
     //在回调函数中是不可以使用this的，所以需要在外部定义一个变量代表this。
@@ -120,9 +145,20 @@ Page({
     })
   },
   onTapLocationWrapper(){
+    //引导用户进入设置页面开启权限
+    if(this.data.locationAuthType === UNAUTHORIZED)
+      wx.openSetting()
+    else
+      this.getLocation()
+  },
+  getLocation(){
     var self = this
     wx.getLocation({
       success: function(res) {
+        self.setData({
+          locationAuthType: AUTHORIZED,
+          locationTipsText: AUTHORIZED_TIPS
+        }),
         self.qqmapsdk.reverseGeocoder({
           location: {
             latitude: res.latitude,
@@ -135,12 +171,16 @@ Page({
               city: city,
               locationTipsText: ''
             })
-            console.log('hh')
             self.getNow()
-            console.log('hh')
-          },
+          }
         })
       },
+      fail: function(){
+        self.setData({
+          locationAuthType: UNAUTHORIZED,
+          locationTipsText: UNAUTHORIZED_TIPS
+        })
+      }
     })
   }
 })
